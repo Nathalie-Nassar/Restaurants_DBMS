@@ -1,74 +1,10 @@
 import java.sql.*;
 
 public class Database {
-     public static String getTechnicians(String location){
-            String result = "";
-            String url = "jdbc:mysql://localhost:3306/laboratory";
-            String username = "root";
-            String passwd = "####";
-            try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                Connection connection = DriverManager.getConnection(url, username, passwd);
-
-                Statement stmt = connection.createStatement();
-                String getTechnicians = "select tno , tname, tjob , tmgr , thiredate  ,tsalary , tbonus  from  technician , lab  where technician.tlno = lab.lno and lab.llocation = \""+location+"\";";
-
-                ResultSet resultSet = stmt.executeQuery(getTechnicians);
-
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("tno");
-                    String name = resultSet.getString("tname");
-                    String job = resultSet.getString("tjob");
-                    int mgr = resultSet.getInt("tmgr");
-                    Date hiredate = resultSet.getDate("thiredate");
-                    int salary = resultSet.getInt("tsalary");
-                    int bonus = resultSet.getInt("tbonus");
-
-                    String mgrnamequery = "select tname from technician where technician.tno = "+mgr+";";
-                    Statement statement = connection.createStatement();
-                    ResultSet mgrnameset = statement.executeQuery(mgrnamequery);
-                    String mgrname = "";
-                    while (mgrnameset.next()) {
-                        mgrname = mgrnameset.getString("tname");
-                    }
-                    result+=("id & Name: " +id + " , "+ name + " ; Job: " + job +" , His manager is " + mgrname + " , hired on: " + (hiredate) +", Salary: " + salary + ", bonus: "+bonus+"\n");
-                }
-
-            } catch (ClassNotFoundException | SQLException e) { e.printStackTrace(); }
-            return result;
-        }
-
-        public static String getLabInfo(String location){
-            String result = "";
-            String url = "jdbc:mysql://localhost:3306/laboratory";
-            String username = "root";
-            String passwd = "####";
-            try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                Connection connection = DriverManager.getConnection(url, username, passwd);
-
-                Statement stmt = connection.createStatement();
-                String getLabInfo = "call getLabInfo(\""+location+"\");";
-
-                ResultSet resultSet = stmt.executeQuery(getLabInfo);
-
-                while (resultSet.next()) {
-                    String lname = resultSet.getString("lname");
-                    String maxSalary = resultSet.getString("max(tsalary)");
-                    String minSalary = resultSet.getString("min(tsalary)");
-                    String avgSalary = resultSet.getString("avg(tsalary)");
-                    String count = resultSet.getString("count(*)");
-
-                    result+= ("Lab Name: "+lname +", Max Salary: "+ maxSalary +" , Min Salary: "+ minSalary +" , Average Salary: "+ avgSalary +" , Number of Technicians: "+ count+"\n");
-                }
-            } catch (ClassNotFoundException | SQLException e) { e.printStackTrace(); }
-            return result;
-        }
-
     public static Connection Connect(String dbname){
         String url = "jdbc:mysql://localhost:3306/"+dbname;
         String username = "root";
-        String passwd = "Agtx2389#";
+        String passwd = "####";
         Connection connection = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -77,41 +13,33 @@ public class Database {
         return connection;
     }
 
-    public static String getRestaurants(String location){
-        String result = "";
-        String url = "jdbc:mysql://localhost:3306/laboratory";
-        String username = "root";
-        String passwd = "####";
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(url, username, passwd);
+    public static String getEmployees() throws SQLException {
+         String result = "";
+         Connection connection = Connect("restaurants");
+         Statement stmt = connection.createStatement();
+         String getEmployees = "select *  from  employee";
+         ResultSet resultSet = stmt.executeQuery(getEmployees);
 
-            Statement stmt = connection.createStatement();
-            String getTechnicians = "select tno , tname, tjob , tmgr , thiredate  ,tsalary , tbonus  from  technician , lab  where technician.tlno = lab.lno and lab.llocation = \""+location+"\";";
+         while (resultSet.next()) {
+             int id = resultSet.getInt("eid");
+             int salary = resultSet.getInt("salary");
+             String name = resultSet.getString("eName");
+             String phoneNumber = resultSet.getString("phoneNumber");
+             String address = resultSet.getString("adress");
+             int restaurantId = resultSet.getInt("restaurantID");
 
-            ResultSet resultSet = stmt.executeQuery(getTechnicians);
+             String getRestaurant = "select rName  from  restaurant where rID = "+restaurantId;
 
-            while (resultSet.next()) {
-                int id = resultSet.getInt("tno");
-                String name = resultSet.getString("tname");
-                String job = resultSet.getString("tjob");
-                int mgr = resultSet.getInt("tmgr");
-                Date hiredate = resultSet.getDate("thiredate");
-                int salary = resultSet.getInt("tsalary");
-                int bonus = resultSet.getInt("tbonus");
-
-                String mgrnamequery = "select tname from technician where technician.tno = "+mgr+";";
-                Statement statement = connection.createStatement();
-                ResultSet mgrnameset = statement.executeQuery(mgrnamequery);
-                String mgrname = "";
-                while (mgrnameset.next()) {
-                    mgrname = mgrnameset.getString("tname");
-                }
-                result+=("id & Name: " +id + " , "+ name + " ; Job: " + job +" , His manager is " + mgrname + " , hired on: " + (hiredate) +", Salary: " + salary + ", bonus: "+bonus+"\n");
+             Statement statement = connection.createStatement();
+             ResultSet restaurantSet = statement.executeQuery(getRestaurant);
+             String restaurant = "";
+             while (restaurantSet.next()) {
+                 restaurant = restaurantSet.getString("rName");
+             }
+             result+="The workers at " + restaurant +" are: \n";
+             result+=("Name: " +name + " , " + phoneNumber + " and his salary is "+salary+"\n");
             }
-
-        } catch (ClassNotFoundException | SQLException e) { e.printStackTrace(); }
-        return result;
+         return result;
     }
 
 }

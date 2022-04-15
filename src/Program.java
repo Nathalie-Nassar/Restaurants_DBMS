@@ -1,6 +1,6 @@
 public class Program{
     public static void main(String[] args) {
-        GUI frame = new GUI();
+        GetEmployeesFrame frame = new GetEmployeesFrame();
         frame.setVisible(true);
     }
 }
