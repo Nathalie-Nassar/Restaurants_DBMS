@@ -1,0 +1,12 @@
+create schema restaurants;
+create table Cashier (     cID INT NOT NULL primary key,    FOREIGN KEY (cID) REFERENCES Employee(eID)  ON DELETE CASCADE     ON UPDATE CASCADE );
+create table Waiter (     wID INT NOT NULL primary key,    FOREIGN KEY (wID) REFERENCES Employee(eID)  ON DELETE RESTRICT ON UPDATE CASCADE );
+create table Deliverer (     dID INT NOT NULL primary key,    FOREIGN KEY (dID) REFERENCES Employee(eID)  ON DELETE CASCADE     ON UPDATE CASCADE );
+create table Chef (     chID INT NOT NULL primary key,    cType VARCHAR(20) NOT NULL,  FOREIGN KEY (chID) REFERENCES Employee(eID)  ON DELETE CASCADE     ON UPDATE CASCADE );
+create table theorder (  orderNum INT NOT NULL primary key,      orderDate DATETIME DEFAULT CURRENT_TIMESTAMP,      totalPrice decimal(19,4) not null,     isTable BOOLEAN,     isTakeAway BOOLEAN,     isDelivery BOOLEAN,     Table_Nb int,     address varchar(100) );
+create table Product (  pID int not null primary key,     pName varchar(100) not null,     ingrediants varchar(500) not null,     category varchar(100),     price decimal(19,4) not null     );
+create table Include (  productID int not null,  orderNum INT NOT NULL primary key,   FOREIGN KEY (productID) REFERENCES product(pID),  FOREIGN KEY (orderNum) REFERENCES theOrder(orderNum) );
+create table customer(  csID int not null primary key,     cName varchar(100) not null,     phone_customer VARCHAR(20) NOT NULL );
+create table ordering(  orderNum INT NOT NULL,   csID int not null primary key,  FOREIGN KEY (orderNum) REFERENCES theOrder(orderNum),  FOREIGN KEY (csID) REFERENCES Customer(csID) );
+create table Serve (  orderNum INT NOT NULL primary key,   chID INT NOT NULL ,   wID INT NOT NULL ,  dID INT NOT NULL,      serveTime TIMESTAMP not null,  FOREIGN KEY (orderNum) REFERENCES theOrder(orderNum),  FOREIGN KEY (chID) REFERENCES chef(chID),  FOREIGN KEY (wID) REFERENCES waiter(wID),  FOREIGN KEY (dID) REFERENCES deliverer(dID) );
+create table payment (  csID int not null primary key,  cID int not null,     recipet varchar(200) not null,  FOREIGN KEY (csID) REFERENCES Customer(csID) );
