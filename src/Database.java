@@ -68,7 +68,7 @@ public class Database {
     public static Connection Connect(String dbname){
         String url = "jdbc:mysql://localhost:3306/"+dbname;
         String username = "root";
-        String passwd = "Agtx2389#";
+        String passwd = "####";
         Connection connection = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
